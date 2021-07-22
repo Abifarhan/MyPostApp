@@ -6,4 +6,5 @@ object Constanst {
     const val FUNNY = "funny"
     const val SERIOUS = "serious"
     const val CRAZY = "serious"
+    const val POPULAR = "popular"
 }
