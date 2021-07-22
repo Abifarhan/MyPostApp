@@ -1,4 +1,9 @@
 package com.abifarhan.mypostapp
 
-class Constanst {
+object Constanst {
+
+    const val THOUGHTS = "thoughts"
+    const val FUNNY = "funny"
+    const val SERIOUS = "serious"
+    const val CRAZY = "serious"
 }
