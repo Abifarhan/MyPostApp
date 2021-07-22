@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MyPostApp</string>
+    <string name="write_your_status">Write your status</string>
 </resources>

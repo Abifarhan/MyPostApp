@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddThoughtActivity">
+
+    <ToggleButton
+        android:id="@+id/addFunnyButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:onClick="addFunnyClicked"
+        android:text="Funny"
+        android:textOff="Funny"
+        android:textOn="Funny"
+        app:layout_constraintEnd_toStartOf="@+id/addSeriousButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ToggleButton
+        android:id="@+id/addSeriousButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:onClick="onSeriousButtonClicked"
+        android:text="Serious"
+        android:textOff="Serious"
+        android:textOn="Serious"
+        app:layout_constraintBottom_toBottomOf="@+id/addFunnyButton"
+        app:layout_constraintEnd_toStartOf="@+id/addCrazzyButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/addFunnyButton"
+        app:layout_constraintTop_toTopOf="@+id/addFunnyButton" />
+
+    <ToggleButton
+        android:id="@+id/addCrazzyButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:onClick="onCrazyClicked"
+        android:text="Crazy"
+        android:textOff="Crazy"
+        android:textOn="Crazy"
+        app:layout_constraintBottom_toBottomOf="@+id/addSeriousButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/addSeriousButton"
+        app:layout_constraintTop_toTopOf="@+id/addSeriousButton" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/addCrazzyButton"
+        app:layout_constraintStart_toStartOf="@+id/addFunnyButton"
+        app:layout_constraintTop_toBottomOf="@+id/addSeriousButton" />
+
+    <EditText
+        android:id="@+id/editTextTextMultiLine"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:gravity="start|center_horizontal|top"
+        android:hint="@string/write_your_status"
+        android:inputType="textMultiLine"
+        android:lines="5"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTextPersonName"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Post"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextMultiLine"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
+</androidx.constraintlayout.widget.ConstraintLayout>
