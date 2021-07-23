@@ -5,7 +5,7 @@ object Constanst {
     const val THOUGHTS = "thoughts"
     const val FUNNY = "funny"
     const val SERIOUS = "serious"
-    const val CRAZY = "serious"
+    const val CRAZY = "crazy"
     const val POPULAR = "popular"
 
 

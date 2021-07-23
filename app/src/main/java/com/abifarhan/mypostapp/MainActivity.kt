@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.abifarhan.mypostapp.Constanst.CATEGORY
 import com.abifarhan.mypostapp.Constanst.CRAZY
 import com.abifarhan.mypostapp.Constanst.FUNNY
 import com.abifarhan.mypostapp.Constanst.NUM_COMMENTS
@@ -46,87 +47,98 @@ class MainActivity : AppCompatActivity() {
         adapter = ThoughtAdapter(thought)
         binding.rvMain.adapter = adapter
         binding.rvMain.layoutManager = LinearLayoutManager(this)
-
-
-//        dbCollection.get()
-//            .addOnSuccessListener {
-//                for (document in it) {
-//                    val data = document.data
-//                    val name = data[USERNAME] as String
-//                    val timestamp: Date = document.getDate("timestamp")!!
-//                    val thoughtTxt = data[THOUGHT_TXT] as String
-//                    val numLikes = data[NUM_LIKES] as Long
-//                    val numComments = data[NUM_COMMENTS] as Long
-//                    val documentId = document.id
-//
-//                    val newThought = Thought(name,timestamp, thoughtTxt,numLikes.toInt(), numComments.toInt()
-//                    , documentId)
-//
-//                    thought.add(newThought)
-//                }
-//                adapter.notifyDataSetChanged()
-//            }
-//            .addOnFailureListener {
-//                Log.d("Exception","could not fect data")
-//            }
+        setListener()
     }
 
     override fun onResume() {
         super.onResume()
-        setListener()
+//        setListener()
     }
-    fun setListener() {
-        thoughtsListener = dbCollection
-            .orderBy(
-                TIMESTAMP, Query.Direction.DESCENDING
-            ).addSnapshotListener(this){snapshot, exception ->
-            if (exception != null) {
-                Log.d("Exception","could note retrieve document")
-            }
+    private fun setListener() {
 
-            if (snapshot != null) {
-                thought.clear()
-                for (document in snapshot.documents) {
-                    val data = document.data
-                    val name = data!![USERNAME] as String
-                    val timestamp: Date = document.getDate("timestamp")!!
-                    val thoughtTxt = data[THOUGHT_TXT] as String
-                    val numLikes = data[NUM_LIKES] as Long
-                    val numComments = data[NUM_COMMENTS] as Long
-                    val documentId = document.id
+        if (selectedCategory == POPULAR) {
 
-                    val newThought = Thought(name,timestamp, thoughtTxt,numLikes.toInt(), numComments.toInt()
-                        , documentId)
+        } else {
+            thoughtsListener = dbCollection
+                .orderBy(
+                    TIMESTAMP, Query.Direction.DESCENDING
+                )
+                .whereEqualTo(CATEGORY, selectedCategory)
+                .addSnapshotListener(this){snapshot, exception ->
+                    if (exception != null) {
+                        Log.d("Exception","could note retrieve document")
+                    }
 
-                    thought.add(newThought)
+                    if (snapshot != null) {
+                        thought.clear()
+                        for (document in snapshot.documents) {
+                            val data = document.data
+                            val name = data!![USERNAME] as String
+                            val timestamp: Date = document.getDate("timestamp")!!
+                            val thoughtTxt = data[THOUGHT_TXT] as String
+                            val numLikes = data[NUM_LIKES] as Long
+                            val numComments = data[NUM_COMMENTS] as Long
+                            val documentId = document.id
+
+                            val newThought = Thought(name,timestamp, thoughtTxt,numLikes.toInt(), numComments.toInt()
+                                , documentId)
+
+                            thought.add(newThought)
+                        }
+                        adapter.notifyDataSetChanged()
+                    }
                 }
-                adapter.notifyDataSetChanged()
-            }
         }
+
     }
     fun onSeriousClicked(view: View) {
+        if (selectedCategory == SERIOUS) {
+            binding.mainSeriousBtn.isChecked = true
+            return
+        }
         binding.mainCrazyBtn.isChecked = false
-        binding.mainFunnyBtn.isChecked = false
         binding.mainPopularBtn.isChecked = false
-        selectedCategory = SERIOUS
+        binding.mainFunnyBtn.isChecked = false
+        thoughtsListener.remove()
+        setListener()
+    }
+    fun onCrazyClicked(view: View) {
+        if (selectedCategory == CRAZY) {
+            binding.mainCrazyBtn.isChecked = true
+            return
+        }
+        binding.mainFunnyBtn.isChecked = false
+        binding.mainSeriousBtn.isChecked = false
+        binding.mainPopularBtn.isChecked = false
+        thoughtsListener.remove()
+        setListener()
     }
     fun onFunnyClicked(view: View) {
+        if (selectedCategory == FUNNY) {
+            binding.mainFunnyBtn.isChecked = true
+            return
+        }
         binding.mainCrazyBtn.isChecked = false
         binding.mainSeriousBtn.isChecked = false
         binding.mainPopularBtn.isChecked = false
         selectedCategory = FUNNY
+
+        thoughtsListener.remove()
+        setListener()
     }
 
-    fun onCrazyClicked(view: View) {
-        binding.mainPopularBtn.isChecked = false
-        binding.mainFunnyBtn.isChecked = false
-        binding.mainSeriousBtn.isChecked = false
-        selectedCategory = CRAZY
-    }
+
     fun onPopularClicked(view: View) {
+        if (selectedCategory == POPULAR) {
+            binding.mainPopularBtn.isChecked = true
+            return
+        }
         binding.mainSeriousBtn.isChecked = false
         binding.mainFunnyBtn.isChecked = false
         binding.mainCrazyBtn.isChecked = false
         selectedCategory = POPULAR
+
+        thoughtsListener.remove()
+        setListener()
     }
 }

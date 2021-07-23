@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:background="@drawable/category_toogle"
+        android:checked="true"
         android:onClick="onFunnyClicked"
         android:textOff="Funny"
         android:textOn="Funny"
