@@ -47,12 +47,11 @@ class MainActivity : AppCompatActivity() {
         adapter = ThoughtAdapter(thought)
         binding.rvMain.adapter = adapter
         binding.rvMain.layoutManager = LinearLayoutManager(this)
-        setListener()
     }
 
     override fun onResume() {
         super.onResume()
-//        setListener()
+        setListener()
     }
     private fun setListener() {
 
@@ -60,15 +59,13 @@ class MainActivity : AppCompatActivity() {
 
         } else {
             thoughtsListener = dbCollection
-                .orderBy(
-                    TIMESTAMP, Query.Direction.DESCENDING
-                )
+                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .whereEqualTo(CATEGORY, selectedCategory)
                 .addSnapshotListener(this){snapshot, exception ->
+
                     if (exception != null) {
                         Log.d("Exception","could note retrieve document")
                     }
-
                     if (snapshot != null) {
                         thought.clear()
                         for (document in snapshot.documents) {
@@ -83,6 +80,7 @@ class MainActivity : AppCompatActivity() {
                             val newThought = Thought(name,timestamp, thoughtTxt,numLikes.toInt(), numComments.toInt()
                                 , documentId)
 
+                            Log.d("this","This is the data $newThought")
                             thought.add(newThought)
                         }
                         adapter.notifyDataSetChanged()
@@ -99,6 +97,7 @@ class MainActivity : AppCompatActivity() {
         binding.mainCrazyBtn.isChecked = false
         binding.mainPopularBtn.isChecked = false
         binding.mainFunnyBtn.isChecked = false
+        selectedCategory = SERIOUS
         thoughtsListener.remove()
         setListener()
     }
@@ -110,6 +109,7 @@ class MainActivity : AppCompatActivity() {
         binding.mainFunnyBtn.isChecked = false
         binding.mainSeriousBtn.isChecked = false
         binding.mainPopularBtn.isChecked = false
+        selectedCategory = CRAZY
         thoughtsListener.remove()
         setListener()
     }
