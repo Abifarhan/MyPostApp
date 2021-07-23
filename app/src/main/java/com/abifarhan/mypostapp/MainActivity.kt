@@ -24,6 +24,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -56,10 +57,20 @@ class MainActivity : AppCompatActivity() {
     private fun setListener() {
 
         if (selectedCategory == POPULAR) {
+            thoughtsListener = dbCollection
+                .orderBy(NUM_LIKES, Query.Direction.DESCENDING)
+                .addSnapshotListener(this){snapshot, exception ->
 
+                    if (exception != null) {
+                        Log.d("Exception","could note retrieve document")
+                    }
+                    if (snapshot != null) {
+                        parseData(snapshot)
+                    }
+                }
         } else {
             thoughtsListener = dbCollection
-                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .orderBy("timestamp", Query.Direction.ASCENDING)
                 .whereEqualTo(CATEGORY, selectedCategory)
                 .addSnapshotListener(this){snapshot, exception ->
 
@@ -67,23 +78,7 @@ class MainActivity : AppCompatActivity() {
                         Log.d("Exception","could note retrieve document")
                     }
                     if (snapshot != null) {
-                        thought.clear()
-                        for (document in snapshot.documents) {
-                            val data = document.data
-                            val name = data!![USERNAME] as String
-                            val timestamp: Date = document.getDate("timestamp")!!
-                            val thoughtTxt = data[THOUGHT_TXT] as String
-                            val numLikes = data[NUM_LIKES] as Long
-                            val numComments = data[NUM_COMMENTS] as Long
-                            val documentId = document.id
-
-                            val newThought = Thought(name,timestamp, thoughtTxt,numLikes.toInt(), numComments.toInt()
-                                , documentId)
-
-                            Log.d("this","This is the data $newThought")
-                            thought.add(newThought)
-                        }
-                        adapter.notifyDataSetChanged()
+                        parseData(snapshot)
                     }
                 }
         }
@@ -140,5 +135,25 @@ class MainActivity : AppCompatActivity() {
 
         thoughtsListener.remove()
         setListener()
+    }
+
+    fun parseData(snapshot: QuerySnapshot) {
+        thought.clear()
+        for (document in snapshot.documents) {
+            val data = document.data
+            val name = data!![USERNAME] as String
+            val timestamp: Date = document.getDate("timestamp")!!
+            val thoughtTxt = data[THOUGHT_TXT] as String
+            val numLikes = data[NUM_LIKES] as Long
+            val numComments = data[NUM_COMMENTS] as Long
+            val documentId = document.id
+
+            val newThought = Thought(name,timestamp, thoughtTxt,numLikes.toInt(), numComments.toInt()
+                , documentId)
+
+            Log.d("this","This is the data $newThought")
+            thought.add(newThought)
+        }
+        adapter.notifyDataSetChanged()
     }
 }
