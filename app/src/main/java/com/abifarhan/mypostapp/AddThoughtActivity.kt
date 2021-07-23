@@ -4,10 +4,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import com.abifarhan.mypostapp.Constanst.CATEGORY
 import com.abifarhan.mypostapp.Constanst.CRAZY
 import com.abifarhan.mypostapp.Constanst.FUNNY
+import com.abifarhan.mypostapp.Constanst.NUM_COMMENTS
+import com.abifarhan.mypostapp.Constanst.NUM_LIKES
 import com.abifarhan.mypostapp.Constanst.SERIOUS
 import com.abifarhan.mypostapp.Constanst.THOUGHTS
+import com.abifarhan.mypostapp.Constanst.THOUGHT_TXT
+import com.abifarhan.mypostapp.Constanst.TIMESTAMP
+import com.abifarhan.mypostapp.Constanst.USERNAME
 import com.abifarhan.mypostapp.databinding.ActivityAddThoughtBinding
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -25,12 +31,12 @@ class AddThoughtActivity : AppCompatActivity() {
         binding.buttonSavePost.setOnClickListener {
 
             val data = HashMap<String, Any>()
-            data["category"] = selectedCategory
-            data["numComments"] = 0
-            data["numLikes"] = 0
-            data["thoughtTxt"] = binding.addThoughtTxt.text.toString()
-            data["timestamp"] = FieldValue.serverTimestamp()
-            data["username"] = binding.addUserNameTxt.text.toString()
+            data[CATEGORY] = selectedCategory
+            data[NUM_COMMENTS] = 0
+            data[NUM_LIKES] = 0
+            data[THOUGHT_TXT] = binding.addThoughtTxt.text.toString()
+            data[TIMESTAMP] = FieldValue.serverTimestamp()
+            data[USERNAME] = binding.addUserNameTxt.text.toString()
 
             FirebaseFirestore.getInstance().collection(THOUGHTS)
                 .add(data)

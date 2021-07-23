@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/listViewNameTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:text="Johny B"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/listViewDateTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:text="Date"
+        app:layout_constraintBaseline_toBaselineOf="@+id/listViewNameTxt"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/listViewThoughtTxt"
+        android:layout_width="153dp"
+        android:layout_height="16dp"
+        android:layout_marginTop="24dp"
+        android:text="This is a random thought"
+        app:layout_constraintStart_toStartOf="@+id/listViewNameTxt"
+        app:layout_constraintTop_toBottomOf="@+id/listViewNameTxt" />
+
+    <TextView
+        android:id="@+id/listViewlNumLikesTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="99"
+        app:layout_constraintBottom_toBottomOf="@+id/listViewLikeImage"
+        app:layout_constraintStart_toEndOf="@+id/listViewLikeImage"
+        app:layout_constraintTop_toTopOf="@+id/listViewLikeImage" />
+
+    <ImageView
+        android:id="@+id/listViewLikeImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="@+id/listViewThoughtTxt"
+        app:layout_constraintTop_toBottomOf="@+id/listViewThoughtTxt"
+        app:srcCompat="@drawable/ic_baseline_star_24" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
