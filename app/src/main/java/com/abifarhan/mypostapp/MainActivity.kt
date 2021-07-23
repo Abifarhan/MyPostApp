@@ -22,6 +22,7 @@ import com.abifarhan.mypostapp.databinding.ActivityMainBinding
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -75,7 +76,10 @@ class MainActivity : AppCompatActivity() {
         setListener()
     }
     fun setListener() {
-        thoughtsListener = dbCollection.addSnapshotListener(this){snapshot, exception ->
+        thoughtsListener = dbCollection
+            .orderBy(
+                TIMESTAMP, Query.Direction.DESCENDING
+            ).addSnapshotListener(this){snapshot, exception ->
             if (exception != null) {
                 Log.d("Exception","could note retrieve document")
             }
