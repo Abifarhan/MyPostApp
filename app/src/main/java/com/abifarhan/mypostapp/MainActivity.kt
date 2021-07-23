@@ -21,6 +21,7 @@ import com.abifarhan.mypostapp.Constanst.USERNAME
 import com.abifarhan.mypostapp.databinding.ActivityMainBinding
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var adapter: ThoughtAdapter
     private val thought = arrayListOf<Thought>()
     private val dbCollection = FirebaseFirestore.getInstance().collection(THOUGHTS)
+    lateinit var thoughtsListener: ListenerRegistration
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
@@ -44,11 +46,45 @@ class MainActivity : AppCompatActivity() {
         binding.rvMain.adapter = adapter
         binding.rvMain.layoutManager = LinearLayoutManager(this)
 
-        dbCollection.get()
-            .addOnSuccessListener {
-                for (document in it) {
+
+//        dbCollection.get()
+//            .addOnSuccessListener {
+//                for (document in it) {
+//                    val data = document.data
+//                    val name = data[USERNAME] as String
+//                    val timestamp: Date = document.getDate("timestamp")!!
+//                    val thoughtTxt = data[THOUGHT_TXT] as String
+//                    val numLikes = data[NUM_LIKES] as Long
+//                    val numComments = data[NUM_COMMENTS] as Long
+//                    val documentId = document.id
+//
+//                    val newThought = Thought(name,timestamp, thoughtTxt,numLikes.toInt(), numComments.toInt()
+//                    , documentId)
+//
+//                    thought.add(newThought)
+//                }
+//                adapter.notifyDataSetChanged()
+//            }
+//            .addOnFailureListener {
+//                Log.d("Exception","could not fect data")
+//            }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setListener()
+    }
+    fun setListener() {
+        thoughtsListener = dbCollection.addSnapshotListener(this){snapshot, exception ->
+            if (exception != null) {
+                Log.d("Exception","could note retrieve document")
+            }
+
+            if (snapshot != null) {
+                thought.clear()
+                for (document in snapshot.documents) {
                     val data = document.data
-                    val name = data[USERNAME] as String
+                    val name = data!![USERNAME] as String
                     val timestamp: Date = document.getDate("timestamp")!!
                     val thoughtTxt = data[THOUGHT_TXT] as String
                     val numLikes = data[NUM_LIKES] as Long
@@ -56,17 +92,14 @@ class MainActivity : AppCompatActivity() {
                     val documentId = document.id
 
                     val newThought = Thought(name,timestamp, thoughtTxt,numLikes.toInt(), numComments.toInt()
-                    , documentId)
+                        , documentId)
 
                     thought.add(newThought)
                 }
                 adapter.notifyDataSetChanged()
             }
-            .addOnFailureListener {
-                Log.d("Exception","could not fect data")
-            }
+        }
     }
-
     fun onSeriousClicked(view: View) {
         binding.mainCrazyBtn.isChecked = false
         binding.mainFunnyBtn.isChecked = false
