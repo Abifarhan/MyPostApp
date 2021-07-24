@@ -23,6 +23,7 @@ import com.abifarhan.mypostapp.model.Thought
 import com.abifarhan.mypostapp.adapter.ThoughtAdapter
 import com.abifarhan.mypostapp.databinding.ActivityMainBinding
 import com.abifarhan.mypostapp.utils.Constanst.DOCUMENT_KEY
+import com.abifarhan.mypostapp.utils.Constanst.TIMESTAMP
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -50,12 +51,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         adapter = ThoughtAdapter(thought){ thoughts ->
-            if (thoughts != null) {
-                val commentActivity = Intent(this, CommentActivity::class.java)
-                commentActivity.putExtra(DOCUMENT_KEY, thoughts.documentId)
-                Log.d("data","this is the data you want to send $thoughts")
-                startActivity(commentActivity)
-            }
+            val commentActivity = Intent(this, CommentActivity::class.java)
+            commentActivity.putExtra(DOCUMENT_KEY, thoughts.documentId)
+            Log.d("data","this is the data you want to send $thoughts")
+            startActivity(commentActivity)
 
         }
         binding.rvMain.adapter = adapter
@@ -155,7 +154,7 @@ class MainActivity : AppCompatActivity() {
         for (document in snapshot.documents) {
             val data = document.data
             val name = data!![USERNAME] as String
-            val timestamp: Date = document.getDate("timestamp")!!
+            val timestamp: Date = document.getDate(TIMESTAMP)!!
             val thoughtTxt = data[THOUGHT_TXT] as String
             val numLikes = data[NUM_LIKES] as Long
             val numComments = data[NUM_COMMENTS] as Long

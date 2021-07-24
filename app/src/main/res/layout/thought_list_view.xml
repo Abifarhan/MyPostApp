@@ -52,4 +52,24 @@
         app:layout_constraintTop_toBottomOf="@+id/listViewThoughtTxt"
         app:srcCompat="@drawable/ic_baseline_star_24" />
 
+    <ImageView
+        android:id="@+id/imageView_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/listViewLikeImage"
+        app:layout_constraintStart_toEndOf="@+id/listViewlNumLikesTxt"
+        app:layout_constraintTop_toTopOf="@+id/listViewLikeImage"
+        app:srcCompat="@drawable/ic_baseline_comment_24" />
+
+    <TextView
+        android:id="@+id/textView_comment_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="99"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView_comment"
+        app:layout_constraintStart_toEndOf="@+id/imageView_comment"
+        app:layout_constraintTop_toTopOf="@+id/imageView_comment" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

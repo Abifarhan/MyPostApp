@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.abifarhan.mypostapp.R
 import com.abifarhan.mypostapp.model.Thought
+import com.abifarhan.mypostapp.utils.Constanst.NUM_COMMENTS
 import com.abifarhan.mypostapp.utils.Constanst.NUM_LIKES
 import com.abifarhan.mypostapp.utils.Constanst.THOUGHTS
 import com.google.firebase.firestore.FirebaseFirestore
@@ -20,17 +21,29 @@ class ThoughtAdapter(
     val itemClick: (Thought) -> Unit
 ) : RecyclerView.Adapter<ThoughtAdapter.ViewHolder>() {
 
-    inner class ViewHolder(itemView: View?, val itemClick: (Thought) -> Unit) : RecyclerView.ViewHolder(itemView!!) {
-        val username = itemView?.findViewById<TextView>(R.id.listViewNameTxt)
-        val timestamp = itemView?.findViewById<TextView>(R.id.listViewDateTxt)
-        val thoughtTxt = itemView?.findViewById<TextView>(R.id.listViewThoughtTxt)
-        val numLikes = itemView?.findViewById<TextView>(R.id.listViewlNumLikesTxt)
-        val likesImage = itemView?.findViewById<ImageView>(R.id.listViewLikeImage)
+    inner class ViewHolder(itemView: View?,
+                           val itemClick: (Thought) -> Unit)
+        : RecyclerView.ViewHolder(itemView!!) {
+        val username =
+            itemView?.findViewById<TextView>(R.id.listViewNameTxt)
+        val timestamp =
+            itemView?.findViewById<TextView>(R.id.listViewDateTxt)
+        val thoughtTxt =
+            itemView?.findViewById<TextView>(R.id.listViewThoughtTxt)
+        val numLikes =
+            itemView?.findViewById<TextView>(R.id.listViewlNumLikesTxt)
+        val likesImage =
+            itemView?.findViewById<ImageView>(R.id.listViewLikeImage)
+        val numComment =
+            itemView?.findViewById<TextView>(R.id.textView_comment_count)
+        val commentImage =
+            itemView?.findViewById<ImageView>(R.id.imageView_comment)
 
         fun bindThought(thought: Thought) {
             username?.text = thought.username
             thoughtTxt?.text = thought.thoughtTxt
             numLikes?.text = thought.numLikes.toString()
+            numComment?.text = thought.numComments.toString()
 
             val dateFormatter = SimpleDateFormat("MMM d, h:mm a", Locale.getDefault())
             val dateString = dateFormatter.format(thought.timestamp)
@@ -42,6 +55,12 @@ class ThoughtAdapter(
                     .update(NUM_LIKES, thought.numLikes + 1)
             }
 
+            commentImage?.setOnClickListener {
+                FirebaseFirestore.getInstance().collection(THOUGHTS)
+                    .document(thought.documentId)
+                    .update(NUM_COMMENTS, thought.numComments + 1)
+            }
+
             itemView.setOnClickListener {
                 itemClick(thought)
             }
@@ -50,7 +69,9 @@ class ThoughtAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(parent?.context).inflate(R.layout.thought_list_view, parent, false)
+            LayoutInflater.from(parent?.context).
+            inflate(R.layout.thought_list_view,
+                parent, false)
         return ViewHolder(view, itemClick)
     }
 
