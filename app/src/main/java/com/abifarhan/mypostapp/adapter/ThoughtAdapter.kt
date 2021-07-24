@@ -15,9 +15,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ThoughtAdapter(val thoughts: ArrayList<Thought>): RecyclerView.Adapter<ThoughtAdapter.ViewHolder>() {
+class ThoughtAdapter(
+    val thoughts: ArrayList<Thought>,
+    val itemClick: (Thought) -> Unit
+) : RecyclerView.Adapter<ThoughtAdapter.ViewHolder>() {
 
-    inner class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView!!) {
+    inner class ViewHolder(itemView: View?, val itemClick: (Thought) -> Unit) : RecyclerView.ViewHolder(itemView!!) {
         val username = itemView?.findViewById<TextView>(R.id.listViewNameTxt)
         val timestamp = itemView?.findViewById<TextView>(R.id.listViewDateTxt)
         val thoughtTxt = itemView?.findViewById<TextView>(R.id.listViewThoughtTxt)
@@ -38,12 +41,17 @@ class ThoughtAdapter(val thoughts: ArrayList<Thought>): RecyclerView.Adapter<Tho
                     .document(thought.documentId)
                     .update(NUM_LIKES, thought.numLikes + 1)
             }
+
+            itemView.setOnClickListener {
+                itemClick(thought)
+            }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent?.context).inflate(R.layout.thought_list_view, parent, false)
-        return ViewHolder(view)
+        val view =
+            LayoutInflater.from(parent?.context).inflate(R.layout.thought_list_view, parent, false)
+        return ViewHolder(view, itemClick)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -53,8 +61,6 @@ class ThoughtAdapter(val thoughts: ArrayList<Thought>): RecyclerView.Adapter<Tho
     override fun getItemCount(): Int {
         return thoughts.count()
     }
-
-
 
 
 }

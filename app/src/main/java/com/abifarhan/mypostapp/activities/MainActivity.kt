@@ -22,6 +22,7 @@ import com.abifarhan.mypostapp.R
 import com.abifarhan.mypostapp.model.Thought
 import com.abifarhan.mypostapp.adapter.ThoughtAdapter
 import com.abifarhan.mypostapp.databinding.ActivityMainBinding
+import com.abifarhan.mypostapp.utils.Constanst.DOCUMENT_KEY
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -48,7 +49,15 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, AddThoughtActivity::class.java))
         }
 
-        adapter = ThoughtAdapter(thought)
+        adapter = ThoughtAdapter(thought){ thoughts ->
+            if (thoughts != null) {
+                val commentActivity = Intent(this, CommentActivity::class.java)
+                commentActivity.putExtra(DOCUMENT_KEY, thoughts.documentId)
+                Log.d("data","this is the data you want to send $thoughts")
+                startActivity(commentActivity)
+            }
+
+        }
         binding.rvMain.adapter = adapter
         binding.rvMain.layoutManager = LinearLayoutManager(this)
         auth = FirebaseAuth.getInstance()

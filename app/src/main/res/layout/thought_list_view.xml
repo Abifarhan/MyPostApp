@@ -26,8 +26,8 @@
 
     <TextView
         android:id="@+id/listViewThoughtTxt"
-        android:layout_width="153dp"
-        android:layout_height="16dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="This is a random thought"
         app:layout_constraintStart_toStartOf="@+id/listViewNameTxt"

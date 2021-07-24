@@ -4,6 +4,8 @@ object Constanst {
 
     const val THOUGHTS = "thoughts"
     const val USER_REF = "user"
+    const val COMMENTS_REF = "comments"
+
     const val FUNNY = "funny"
     const val SERIOUS = "serious"
     const val CRAZY = "crazy"
@@ -17,5 +19,8 @@ object Constanst {
     const val USERNAME = "username"
     const val TIMESTAMP = "timestamp"
     const val DATE_CREATE = "dateCreate"
+    const val COMMENT_TXT = "commentTxt"
 
+//    Others contansts
+    const val DOCUMENT_KEY = "docId"
 }
