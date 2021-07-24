@@ -15,6 +15,7 @@ import com.abifarhan.mypostapp.utils.Constanst.THOUGHT_TXT
 import com.abifarhan.mypostapp.utils.Constanst.TIMESTAMP
 import com.abifarhan.mypostapp.utils.Constanst.USERNAME
 import com.abifarhan.mypostapp.databinding.ActivityAddThoughtBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -36,7 +37,7 @@ class AddThoughtActivity : AppCompatActivity() {
             data[NUM_LIKES] = 0
             data[THOUGHT_TXT] = binding.addThoughtTxt.text.toString()
             data[TIMESTAMP] = FieldValue.serverTimestamp()
-            data[USERNAME] = binding.addUserNameTxt.text.toString()
+            data[USERNAME] = FirebaseAuth.getInstance().currentUser?.displayName.toString()
 
             FirebaseFirestore.getInstance().collection(THOUGHTS)
                 .add(data)
