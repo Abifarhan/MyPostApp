@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         if (selectedCategory == POPULAR) {
             thoughtsListener = dbCollection
-                .orderBy(NUM_LIKES, Query.Direction.DESCENDING)
+                .orderBy(NUM_LIKES, Query.Direction.ASCENDING)
                 .addSnapshotListener(this){snapshot, exception ->
 
                     if (exception != null) {
@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity() {
         setListener()
     }
 
-    fun parseData(snapshot: QuerySnapshot) {
+    private fun parseData(snapshot: QuerySnapshot) {
         thought.clear()
         for (document in snapshot.documents) {
             val data = document.data
