@@ -1,13 +1,13 @@
-package com.abifarhan.mypostapp
+package com.abifarhan.mypostapp.utils
 
 object Constanst {
 
     const val THOUGHTS = "thoughts"
+    const val USER_REF = "user"
     const val FUNNY = "funny"
     const val SERIOUS = "serious"
     const val CRAZY = "crazy"
     const val POPULAR = "popular"
-
 
 //    fields
     const val CATEGORY = "category"
@@ -16,4 +16,6 @@ object Constanst {
     const val THOUGHT_TXT = "thoughtTxt"
     const val USERNAME = "username"
     const val TIMESTAMP = "timestamp"
+    const val DATE_CREATE = "dateCreate"
+
 }

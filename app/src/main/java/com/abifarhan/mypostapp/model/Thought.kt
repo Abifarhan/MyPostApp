@@ -1,4 +1,4 @@
-package com.abifarhan.mypostapp
+package com.abifarhan.mypostapp.model
 
 import com.google.firebase.Timestamp
 import java.util.*

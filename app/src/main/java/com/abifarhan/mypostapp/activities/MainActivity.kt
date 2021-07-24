@@ -1,26 +1,28 @@
-package com.abifarhan.mypostapp
+package com.abifarhan.mypostapp.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.abifarhan.mypostapp.Constanst.CATEGORY
-import com.abifarhan.mypostapp.Constanst.CRAZY
-import com.abifarhan.mypostapp.Constanst.FUNNY
-import com.abifarhan.mypostapp.Constanst.NUM_COMMENTS
-import com.abifarhan.mypostapp.Constanst.NUM_LIKES
-import com.abifarhan.mypostapp.Constanst.POPULAR
-import com.abifarhan.mypostapp.Constanst.SERIOUS
-import com.abifarhan.mypostapp.Constanst.THOUGHTS
-import com.abifarhan.mypostapp.Constanst.THOUGHT_TXT
-import com.abifarhan.mypostapp.Constanst.TIMESTAMP
-import com.abifarhan.mypostapp.Constanst.USERNAME
+import com.abifarhan.mypostapp.utils.Constanst.CATEGORY
+import com.abifarhan.mypostapp.utils.Constanst.CRAZY
+import com.abifarhan.mypostapp.utils.Constanst.FUNNY
+import com.abifarhan.mypostapp.utils.Constanst.NUM_COMMENTS
+import com.abifarhan.mypostapp.utils.Constanst.NUM_LIKES
+import com.abifarhan.mypostapp.utils.Constanst.POPULAR
+import com.abifarhan.mypostapp.utils.Constanst.SERIOUS
+import com.abifarhan.mypostapp.utils.Constanst.THOUGHTS
+import com.abifarhan.mypostapp.utils.Constanst.THOUGHT_TXT
+import com.abifarhan.mypostapp.utils.Constanst.USERNAME
+import com.abifarhan.mypostapp.R
+import com.abifarhan.mypostapp.model.Thought
+import com.abifarhan.mypostapp.adapter.ThoughtAdapter
 import com.abifarhan.mypostapp.databinding.ActivityMainBinding
-import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
@@ -36,6 +38,7 @@ class MainActivity : AppCompatActivity() {
     private val thought = arrayListOf<Thought>()
     private val dbCollection = FirebaseFirestore.getInstance().collection(THOUGHTS)
     lateinit var thoughtsListener: ListenerRegistration
+    lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
@@ -48,11 +51,12 @@ class MainActivity : AppCompatActivity() {
         adapter = ThoughtAdapter(thought)
         binding.rvMain.adapter = adapter
         binding.rvMain.layoutManager = LinearLayoutManager(this)
+        auth = FirebaseAuth.getInstance()
     }
 
     override fun onResume() {
         super.onResume()
-        setListener()
+        updateUI()
     }
     private fun setListener() {
 
@@ -155,5 +159,53 @@ class MainActivity : AppCompatActivity() {
             thought.add(newThought)
         }
         adapter.notifyDataSetChanged()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        val menuItem = menu?.getItem(0)
+        if (auth.currentUser == null) {
+            menuItem?.title = "Login"
+        }else{
+            menuItem?.title = "Logout"
+        }
+
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_login) {
+            if (auth.currentUser == null) {
+                startActivity(Intent(this, LoginActivity::class.java))
+            } else{
+                auth.signOut()
+                updateUI()
+            }
+            return true
+        }
+        return false
+    }
+
+    fun updateUI() {
+        if (auth.currentUser == null) {
+            binding.mainCrazyBtn.isEnabled = false
+            binding.mainPopularBtn.isEnabled = false
+            binding.mainSeriousBtn.isEnabled = false
+            binding.mainFunnyBtn.isEnabled = false
+            binding.floatingActionButton.isEnabled = false
+            thought.clear()
+            adapter.notifyDataSetChanged()
+        } else {
+            binding.mainCrazyBtn.isEnabled = true
+            binding.mainPopularBtn.isEnabled = true
+            binding.mainSeriousBtn.isEnabled = true
+            binding.mainFunnyBtn.isEnabled = true
+            binding.floatingActionButton.isEnabled = true
+            setListener()
+        }
     }
 }

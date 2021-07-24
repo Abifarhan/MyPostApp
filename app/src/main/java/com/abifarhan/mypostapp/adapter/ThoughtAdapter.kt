@@ -1,14 +1,15 @@
-package com.abifarhan.mypostapp
+package com.abifarhan.mypostapp.adapter
 
-import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.abifarhan.mypostapp.Constanst.NUM_LIKES
-import com.abifarhan.mypostapp.Constanst.THOUGHTS
+import com.abifarhan.mypostapp.R
+import com.abifarhan.mypostapp.model.Thought
+import com.abifarhan.mypostapp.utils.Constanst.NUM_LIKES
+import com.abifarhan.mypostapp.utils.Constanst.THOUGHTS
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.*
