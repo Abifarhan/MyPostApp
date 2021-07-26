@@ -7,18 +7,21 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.abifarhan.mypostapp.R
+import com.abifarhan.mypostapp.`interface`.ThoughtsOptionsClickListener
 import com.abifarhan.mypostapp.model.Thought
 import com.abifarhan.mypostapp.utils.Constanst.NUM_COMMENTS
 import com.abifarhan.mypostapp.utils.Constanst.NUM_LIKES
 import com.abifarhan.mypostapp.utils.Constanst.THOUGHTS
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
 class ThoughtAdapter(
-    val thoughts: ArrayList<Thought>,
-    val itemClick: (Thought) -> Unit
+    private val thoughts: ArrayList<Thought>,
+    val thoughtsOptionsClickListener: ThoughtsOptionsClickListener,
+    private val itemClick: (Thought) -> Unit
 ) : RecyclerView.Adapter<ThoughtAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View?,
@@ -26,18 +29,23 @@ class ThoughtAdapter(
         : RecyclerView.ViewHolder(itemView!!) {
         val username =
             itemView?.findViewById<TextView>(R.id.listViewNameTxt)
-        val timestamp =
+        private val timestamp =
             itemView?.findViewById<TextView>(R.id.listViewDateTxt)
-        val thoughtTxt =
+        private val thoughtTxt =
             itemView?.findViewById<TextView>(R.id.listViewThoughtTxt)
-        val numLikes =
+        private val numLikes =
             itemView?.findViewById<TextView>(R.id.listViewlNumLikesTxt)
-        val likesImage =
+        private val likesImage =
             itemView?.findViewById<ImageView>(R.id.listViewLikeImage)
-        val numComment =
+        private val numComment =
             itemView?.findViewById<TextView>(R.id.textView_comment_count)
-        val commentImage =
+        private val commentImage =
             itemView?.findViewById<ImageView>(R.id.imageView_comment)
+
+        val optionsImage = itemView?.findViewById<ImageView>(
+            R.id.imageView_action_for_comment
+        )
+
 
         fun bindThought(thought: Thought) {
             username?.text = thought.username
@@ -64,12 +72,21 @@ class ThoughtAdapter(
             itemView.setOnClickListener {
                 itemClick(thought)
             }
+
+            optionsImage?.visibility = View.INVISIBLE
+
+            if (FirebaseAuth.getInstance().currentUser?.uid == thought.userId) {
+                optionsImage?.visibility = View.VISIBLE
+                optionsImage?.setOnClickListener {
+                    thoughtsOptionsClickListener.thoughtsOptionsMenuClicked(thought)
+                }
+            }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(parent?.context).
+            LayoutInflater.from(parent.context).
             inflate(R.layout.thought_list_view,
                 parent, false)
         return ViewHolder(view, itemClick)

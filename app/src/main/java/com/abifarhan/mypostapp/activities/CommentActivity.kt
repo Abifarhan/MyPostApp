@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.abifarhan.mypostapp.R
+import com.abifarhan.mypostapp.`interface`.CommentOptionsClickListener
 import com.abifarhan.mypostapp.adapter.CommentsAdapter
 import com.abifarhan.mypostapp.databinding.ActivityCommentBinding
 import com.abifarhan.mypostapp.model.Comment
@@ -17,6 +19,7 @@ import com.abifarhan.mypostapp.utils.Constanst.NUM_COMMENTS
 import com.abifarhan.mypostapp.utils.Constanst.THOUGHTS
 import com.abifarhan.mypostapp.utils.Constanst.TIMESTAMP
 import com.abifarhan.mypostapp.utils.Constanst.USERNAME
+import com.abifarhan.mypostapp.utils.Constanst.USER_ID
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -24,7 +27,7 @@ import com.google.firebase.firestore.Query
 import java.util.*
 import kotlin.collections.HashMap
 
-class CommentActivity : AppCompatActivity() {
+class CommentActivity : AppCompatActivity(), CommentOptionsClickListener {
     private var _binding: ActivityCommentBinding? = null
     private val binding get() = _binding!!
 
@@ -40,7 +43,7 @@ class CommentActivity : AppCompatActivity() {
         thoughtDocumentId = intent.getStringExtra(DOCUMENT_KEY).toString()
         println(thoughtDocumentId)
 
-        commentAdapter = CommentsAdapter(comments)
+        commentAdapter = CommentsAdapter(comments, this)
         binding.rvComment.adapter = commentAdapter
         binding.rvComment.layoutManager = LinearLayoutManager(this)
 
@@ -60,8 +63,11 @@ class CommentActivity : AppCompatActivity() {
                         val name = data!![USERNAME] as String
                         val timestamp = document.getDate(TIMESTAMP)!!
                         val commentTxt = data[COMMENT_TXT] as String
+                        val documentId = document.id
+                        val userId = data[USER_ID] as String
 
-                        val newComment = Comment(name,timestamp, commentTxt)
+
+                        val newComment = Comment(name,timestamp, commentTxt,documentId, userId)
                         comments.add(newComment)
                     }
                     commentAdapter.notifyDataSetChanged()
@@ -88,6 +94,7 @@ class CommentActivity : AppCompatActivity() {
                 data[COMMENT_TXT] = commentTxt
                 data[TIMESTAMP] = FieldValue.serverTimestamp()
                 data[USERNAME] = FirebaseAuth.getInstance().currentUser?.displayName.toString()
+                data[USER_ID] = FirebaseAuth.getInstance().currentUser?.uid.toString()
 
                 transaction.set(newCommentRef, data)
             }
@@ -109,5 +116,9 @@ class CommentActivity : AppCompatActivity() {
             inputManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
 
         }
+    }
+
+    override fun optionsMenuClicked(comment: Comment) {
+        Toast.makeText(this, "Anda klik options comment", Toast.LENGTH_SHORT).show()
     }
 }

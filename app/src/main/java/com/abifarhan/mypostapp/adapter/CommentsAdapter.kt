@@ -3,16 +3,20 @@ package com.abifarhan.mypostapp.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.abifarhan.mypostapp.R
+import com.abifarhan.mypostapp.`interface`.CommentOptionsClickListener
 import com.abifarhan.mypostapp.model.Comment
+import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
 class CommentsAdapter(
     val comments: ArrayList<Comment>,
+    val commentOptionsClickListener: CommentOptionsClickListener
 ) : RecyclerView.Adapter<CommentsAdapter.ViewHolder>(){
 
     inner class ViewHolder(
@@ -28,7 +32,19 @@ class CommentsAdapter(
             val dateString = dateFormatter.format(comment.timestamp)
             itemView.findViewById<TextView>(R.id.textView_date_of_comment).text = dateString
             itemView.findViewById<TextView>(R.id.textView_comment_txt).text = comment.commentTxt
+            val optionsImage =
+                itemView.findViewById<ImageView>(
+                    R.id.imageView_action_comment)
 
+            optionsImage.visibility = View.INVISIBLE
+
+            if (FirebaseAuth.getInstance().currentUser?.uid
+                == comment.userId) {
+                optionsImage?.visibility = View.VISIBLE
+                optionsImage.setOnClickListener {
+                    commentOptionsClickListener.optionsMenuClicked(comment)
+                }
+            }
         }
     }
 

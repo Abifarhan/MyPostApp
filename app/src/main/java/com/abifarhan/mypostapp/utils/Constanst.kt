@@ -20,6 +20,8 @@ object Constanst {
     const val TIMESTAMP = "timestamp"
     const val DATE_CREATE = "dateCreate"
     const val COMMENT_TXT = "commentTxt"
+    const val USER_ID = "userId"
+    const val USER_EMAIL = "userEmail"
 
 //    Others contansts
     const val DOCUMENT_KEY = "docId"

@@ -15,9 +15,11 @@ import com.abifarhan.mypostapp.utils.Constanst.THOUGHT_TXT
 import com.abifarhan.mypostapp.utils.Constanst.TIMESTAMP
 import com.abifarhan.mypostapp.utils.Constanst.USERNAME
 import com.abifarhan.mypostapp.databinding.ActivityAddThoughtBinding
+import com.abifarhan.mypostapp.utils.Constanst.USER_ID
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 
 class AddThoughtActivity : AppCompatActivity() {
 
@@ -38,6 +40,7 @@ class AddThoughtActivity : AppCompatActivity() {
             data[THOUGHT_TXT] = binding.addThoughtTxt.text.toString()
             data[TIMESTAMP] = FieldValue.serverTimestamp()
             data[USERNAME] = FirebaseAuth.getInstance().currentUser?.displayName.toString()
+            data[USER_ID] = FirebaseAuth.getInstance().currentUser?.uid.toString()
 
             FirebaseFirestore.getInstance().collection(THOUGHTS)
                 .add(data)

@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.abifarhan.mypostapp.utils.Constanst.CATEGORY
 import com.abifarhan.mypostapp.utils.Constanst.CRAZY
@@ -19,11 +20,13 @@ import com.abifarhan.mypostapp.utils.Constanst.THOUGHTS
 import com.abifarhan.mypostapp.utils.Constanst.THOUGHT_TXT
 import com.abifarhan.mypostapp.utils.Constanst.USERNAME
 import com.abifarhan.mypostapp.R
+import com.abifarhan.mypostapp.`interface`.ThoughtsOptionsClickListener
 import com.abifarhan.mypostapp.model.Thought
 import com.abifarhan.mypostapp.adapter.ThoughtAdapter
 import com.abifarhan.mypostapp.databinding.ActivityMainBinding
 import com.abifarhan.mypostapp.utils.Constanst.DOCUMENT_KEY
 import com.abifarhan.mypostapp.utils.Constanst.TIMESTAMP
+import com.abifarhan.mypostapp.utils.Constanst.USER_ID
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -31,7 +34,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ThoughtsOptionsClickListener {
 
     private var _binding: ActivityMainBinding? = null
     private val binding get () = _binding!!
@@ -50,7 +53,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, AddThoughtActivity::class.java))
         }
 
-        adapter = ThoughtAdapter(thought){ thoughts ->
+        adapter = ThoughtAdapter(thought, this){ thoughts ->
             val commentActivity = Intent(this, CommentActivity::class.java)
             commentActivity.putExtra(DOCUMENT_KEY, thoughts.documentId)
             Log.d("data","this is the data you want to send $thoughts")
@@ -153,18 +156,20 @@ class MainActivity : AppCompatActivity() {
         thought.clear()
         for (document in snapshot.documents) {
             val data = document.data
-            val name = data!![USERNAME] as String
-            val timestamp: Date = document.getDate(TIMESTAMP)!!
-            val thoughtTxt = data[THOUGHT_TXT] as String
-            val numLikes = data[NUM_LIKES] as Long
-            val numComments = data[NUM_COMMENTS] as Long
-            val documentId = document.id
-
-            val newThought = Thought(name,timestamp, thoughtTxt,numLikes.toInt(), numComments.toInt()
-                , documentId)
-
-            Log.d("this","This is the data $newThought")
-            thought.add(newThought)
+            if (data != null) {
+                val name = data[USERNAME] as String
+                val timestamp: Date = document.getDate(TIMESTAMP)!!
+                val thoughtTxt = data[THOUGHT_TXT] as String
+                val numLikes = data[NUM_LIKES] as Long
+                val numComments = data[NUM_COMMENTS] as Long
+                val documentId = document.id
+                val userId = data[USER_ID] as String
+                Log.d("this","This is the data $userId")
+                val newThought = Thought(name,timestamp, thoughtTxt,numLikes.toInt(), numComments.toInt()
+                    , documentId, userId)
+                thought.add(newThought)
+            }
+//            Log.d("this","This is the data $newThought")
         }
         adapter.notifyDataSetChanged()
     }
@@ -215,5 +220,9 @@ class MainActivity : AppCompatActivity() {
             binding.floatingActionButton.isEnabled = true
             setListener()
         }
+    }
+
+    override fun thoughtsOptionsMenuClicked(thought: Thought) {
+        Toast.makeText(this, "Comment Clicked", Toast.LENGTH_SHORT).show()
     }
 }

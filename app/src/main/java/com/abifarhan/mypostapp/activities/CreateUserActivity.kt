@@ -8,6 +8,7 @@ import com.abifarhan.mypostapp.utils.Constanst.DATE_CREATE
 import com.abifarhan.mypostapp.utils.Constanst.USERNAME
 import com.abifarhan.mypostapp.utils.Constanst.USER_REF
 import com.abifarhan.mypostapp.databinding.ActivityCreateUserBinding
+import com.abifarhan.mypostapp.utils.Constanst.USER_EMAIL
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FieldValue
@@ -30,7 +31,7 @@ class CreateUserActivity : AppCompatActivity() {
             val email = binding.edtEmailRegister.text.toString()
             val pw = binding.edtPwRegister.text.toString()
 
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email.toString(), pw.toString())
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, pw)
                 .addOnSuccessListener {
 
                     val changeRequest = UserProfileChangeRequest.Builder()
@@ -44,11 +45,16 @@ class CreateUserActivity : AppCompatActivity() {
                     val data = HashMap<String, Any>()
                     data[USERNAME] = name
                     data[DATE_CREATE] =  FieldValue.serverTimestamp()
+                    data[USER_EMAIL] = email
                     FirebaseFirestore.getInstance().collection(USER_REF)
                         .document(it.user!!.uid)
                         .set(data)
                         .addOnSuccessListener {
                             finish()
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(this, "Anda gagal melakukan memasukkan data user ke dalam Firestore", Toast.LENGTH_SHORT).show()
+                            Log.d("kalkdsf","user gagal di daftarkan di Firestore karena errornya ${it.localizedMessage}")
                         }
                     Toast.makeText(this, "Anda berhasil melakukan pendaftara", Toast.LENGTH_SHORT)
                         .show()

@@ -33,4 +33,14 @@
         android:text="This is the comment"
         app:layout_constraintStart_toStartOf="@+id/textView_name_comment"
         app:layout_constraintTop_toBottomOf="@+id/textView_name_comment" />
+
+    <ImageView
+        android:id="@+id/imageView_action_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_date_of_comment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView_date_of_comment"
+        app:srcCompat="@drawable/ic_action_for_comment" />
 </androidx.constraintlayout.widget.ConstraintLayout>
