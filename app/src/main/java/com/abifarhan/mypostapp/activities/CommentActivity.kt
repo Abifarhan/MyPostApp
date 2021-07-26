@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.abifarhan.mypostapp.R
 import com.abifarhan.mypostapp.`interface`.CommentOptionsClickListener
@@ -119,6 +121,17 @@ class CommentActivity : AppCompatActivity(), CommentOptionsClickListener {
     }
 
     override fun optionsMenuClicked(comment: Comment) {
-        Toast.makeText(this, "Anda klik options comment", Toast.LENGTH_SHORT).show()
+
+        val builder = AlertDialog.Builder(this)
+        val dialogView = layoutInflater.inflate(R.layout.options_menu, null)
+        val deleteBtn = dialogView.findViewById<Button>(R.id.button_delete_comment)
+        val editBtn = dialogView.findViewById<Button>(R.id.button_edit_comment)
+
+        builder.setView(dialogView)
+            .setNegativeButton("Cancel"){_,_ ->
+
+            }
+
+        val ad = builder.show()
     }
 }
