@@ -1,12 +1,12 @@
 package com.abifarhan.mypostapp.activities
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.abifarhan.mypostapp.R
@@ -15,10 +15,13 @@ import com.abifarhan.mypostapp.adapter.CommentsAdapter
 import com.abifarhan.mypostapp.databinding.ActivityCommentBinding
 import com.abifarhan.mypostapp.model.Comment
 import com.abifarhan.mypostapp.utils.Constanst.COMMENTS_REF
+import com.abifarhan.mypostapp.utils.Constanst.COMMENT_DOC_ID_EXTRA
 import com.abifarhan.mypostapp.utils.Constanst.COMMENT_TXT
+import com.abifarhan.mypostapp.utils.Constanst.COMMENT_TXT_EXTRA
 import com.abifarhan.mypostapp.utils.Constanst.DOCUMENT_KEY
 import com.abifarhan.mypostapp.utils.Constanst.NUM_COMMENTS
 import com.abifarhan.mypostapp.utils.Constanst.THOUGHTS
+import com.abifarhan.mypostapp.utils.Constanst.THOUGHT_DOC_ID_EXTRA
 import com.abifarhan.mypostapp.utils.Constanst.TIMESTAMP
 import com.abifarhan.mypostapp.utils.Constanst.USERNAME
 import com.abifarhan.mypostapp.utils.Constanst.USER_ID
@@ -133,5 +136,36 @@ class CommentActivity : AppCompatActivity(), CommentOptionsClickListener {
             }
 
         val ad = builder.show()
+
+        deleteBtn.setOnClickListener {
+
+
+            val commentRef = FirebaseFirestore.getInstance().collection(
+                THOUGHTS
+            )
+                .document(thoughtDocumentId)
+                .collection(COMMENTS_REF)
+                .document(comment.documentId)
+
+            val thoughtRef = FirebaseFirestore.getInstance().collection(THOUGHTS).document(thoughtDocumentId)
+
+            FirebaseFirestore.getInstance().runTransaction { transaction ->
+                val thought = transaction.get(thoughtRef)
+                val numComments = thought.getLong(NUM_COMMENTS)?.minus(1)
+                transaction.update(commentRef, NUM_COMMENTS, numComments)
+
+                transaction.delete(commentRef)
+            }.addOnSuccessListener {
+                ad.dismiss()
+            }
+        }
+        editBtn.setOnClickListener {
+            val updateIntent = Intent(this, UpdateCommentActivity::class.java)
+            updateIntent.putExtra(THOUGHT_DOC_ID_EXTRA,thoughtDocumentId )
+            updateIntent.putExtra(COMMENT_DOC_ID_EXTRA, comment.documentId)
+            updateIntent.putExtra(COMMENT_TXT_EXTRA, comment.commentTxt)
+            ad.dismiss()
+            startActivity(updateIntent)
+        }
     }
 }

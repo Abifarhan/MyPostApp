@@ -11,9 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyPostApp">
-        <activity android:name=".activities.CommentActivity"></activity>
-        <activity android:name=".activities.CreateUserActivity"></activity>
-        <activity android:name=".activities.LoginActivity"></activity>
+        <activity android:name=".activities.UpdateCommentActivity"></activity>
+        <activity android:name=".activities.CommentActivity" />
+        <activity android:name=".activities.CreateUserActivity" />
+        <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.AddThoughtActivity" />
         <activity android:name=".activities.MainActivity">
             <intent-filter>
