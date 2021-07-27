@@ -1,8 +1,10 @@
 package com.abifarhan.mypostapp.activities
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.inputmethod.InputMethodManager
 import com.abifarhan.mypostapp.R
 import com.abifarhan.mypostapp.databinding.ActivityUpdateCommentBinding
 import com.abifarhan.mypostapp.utils.Constanst.COMMENTS_REF
@@ -39,12 +41,21 @@ class UpdateCommentActivity : AppCompatActivity() {
                 .document(commentDocId)
                 .update(COMMENT_TXT, binding.edtEditComment.text.toString())
                 .addOnSuccessListener {
+                    hideKeyboard()
                     finish()
                 }
                 .addOnFailureListener {
                     Log.d("error","ini penyebab errornya ${it.localizedMessage}")
 
                 }
+
+        }
+    }
+
+    private fun hideKeyboard() {
+        val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        if (inputManager.isAcceptingText) {
+            inputManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
 
         }
     }

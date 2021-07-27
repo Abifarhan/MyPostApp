@@ -63,6 +63,8 @@ class MainActivity : AppCompatActivity(), ThoughtsOptionsClickListener {
         binding.rvMain.adapter = adapter
         binding.rvMain.layoutManager = LinearLayoutManager(this)
         auth = FirebaseAuth.getInstance()
+
+//        binding.dele
     }
 
     override fun onResume() {

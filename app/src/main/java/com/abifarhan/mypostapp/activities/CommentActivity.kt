@@ -139,7 +139,6 @@ class CommentActivity : AppCompatActivity(), CommentOptionsClickListener {
 
         deleteBtn.setOnClickListener {
 
-
             val commentRef = FirebaseFirestore.getInstance().collection(
                 THOUGHTS
             )
